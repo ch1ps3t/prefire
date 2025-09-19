@@ -120,10 +120,34 @@
 		@apply text-foreground;
 		min-height: 100vh;
 		background: linear-gradient(90deg, #0b0d1c, #050505) !important;
+		margin: 0;
+		padding: 0;
 	}
 }
 
 // Custom styles
 .bg-gradient {
 	@apply bg-[linear-gradient(135deg,#0b0d1c,#050505)];
+}
+
+.reveal-fadeup {
+	opacity: 0;
+	transform: translateY(16px);
+	transition:
+		transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+		opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: transform, opacity;
+}
+
+.reveal-fadeup.in-view {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal-fadeup {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
 }

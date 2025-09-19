@@ -16,7 +16,7 @@
 {#if href}
 	<a
 		{href}
-		class="{className} flex flex-row items-center rounded-md overflow-hidden hover:opacity-70 shadow-[0_0_5px_rgba(255,230,255,0.2)] cursor-pointer transition-all duration-300"
+		class="{className} inline-flex flex-row items-center rounded-md overflow-hidden hover:opacity-70 shadow-[0_0_5px_rgba(255,230,255,0.2)] cursor-pointer transition-all duration-300"
 	>
 		<div class="bg-[#fbac18] w-[20px] h-full min-h-[42px] rounded-l-md"></div>
 		<div class="bg-[#ffffff] w-[8px] h-full min-h-[42px]"></div>
@@ -29,7 +29,7 @@
 {:else}
 	<button
 		onclick={handleClick}
-		class="{className} flex flex-row items-center rounded-md overflow-hidden hover:opacity-70 shadow-[0_0_5px_rgba(255,230,255,0.2)] cursor-pointer transition-all duration-300"
+		class="{className} inline-flex flex-row items-center rounded-md overflow-hidden hover:opacity-70 shadow-[0_0_5px_rgba(255,230,255,0.2)] cursor-pointer transition-all duration-300"
 	>
 		<div class="bg-[#fbac18] w-[20px] h-full min-h-[42px] rounded-l-md"></div>
 		<div class="bg-[#ffffff] w-[8px] h-full min-h-[42px]"></div>

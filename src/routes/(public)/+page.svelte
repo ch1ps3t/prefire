@@ -9,18 +9,14 @@
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Accordion from '$lib/components/ui/accordion/index';
 	import { Switch } from '$lib/components/ui/switch/index';
-	import * as Avatar from '$lib/components/ui/avatar/index';
 
 	// Images
-	import Logo from '$lib/assets/images/prefire-logo-white.png';
-	import HeroImage from '$lib/assets/images/placeholder-cs2.webp';
+	import HeroImage from '$lib/assets/images/landing-placeholder.avif';
 	import SkinsImage from '$lib/assets/images/landing-knife.avif';
 	import AboutImage from '$lib/assets/images/landing-train.avif';
 
 	// Videos
-	import Video from '$lib/assets/videos/landing-hero.mp4';
-
-	let mobileMenuOpen = $state(false);
+	import HeroVideo from '$lib/assets/videos/landing-hero.mp4';
 
 	// Pricing toggle
 	let isQuarterly = $state(true);
@@ -47,17 +43,19 @@
 				'Skill balancing',
 				'All gamemodes',
 				'All maps',
+				'Most recent map tab',
+				'Sort players by last played',
 				'Skin changer support',
 				'37 locations',
 				'Admin panel'
 			],
-			cta: 'Get Standard Server'
+			cta: 'Get Standard'
 		},
 		{
 			id: 'Creator',
 			label: 'Creator',
-			priceMonthly: 12.99,
-			pricesQuarterly: 10.99,
+			priceMonthly: 14.99,
+			pricesQuarterly: 13.49,
 			features: [
 				'Twitch integration',
 				'10 player slots',
@@ -65,31 +63,21 @@
 				'24/7 server',
 				'Skill balancing',
 				'All gamemodes',
+				'Most recent map tab',
+				'Sort players by last played',
 				'All maps',
 				'Skin changer support',
 				'37 locations',
 				'Admin panel'
 			],
-			cta: 'Get Server with Twitch Addon'
+			cta: 'Server with Twitch'
 		},
 		{
 			id: 'Tournament',
 			label: 'Tournament',
 			priceMonthly: 'Coming soon',
 			pricesQuarterly: 'Coming soon',
-			features: [
-				'2 spectator slots',
-				'10 player slots',
-				'2 coach slots',
-				'2 analyst slots',
-				'1 admin slot',
-				'Custom HUD overlay',
-				'24/7 server',
-				'All maps',
-				'Experimental anti-cheat',
-				'37 locations',
-				'Admin panel'
-			],
+			features: ['Flagship event features', '15+ exclusive features'],
 			cta: ''
 		}
 	];
@@ -112,234 +100,29 @@
 		return String(value ?? '');
 	}
 
-	// Navbar hide/show on scroll
-	let hideNav = $state(false);
-	let lastScrollY = $state(0);
-	let navbarHeight = $state(0);
-
-	$effect(() => {
-		const navElement = document.querySelector('nav');
-		if (navElement) {
-			navbarHeight = navElement.offsetHeight;
-		}
-
-		const onScroll = () => {
-			const current = window.scrollY || 0;
-			// Keep navbar visible while mobile menu is open
-			if (mobileMenuOpen) {
-				hideNav = false;
-				lastScrollY = current;
-				return;
-			}
-			if (current < 100) {
-				hideNav = false;
-			} else if (current > lastScrollY) {
-				// Scrolling down
-				hideNav = true;
-			} else if (current < lastScrollY) {
-				// Scrolling up
-				hideNav = false;
-			}
-			lastScrollY = current;
-		};
-
-		window.addEventListener('scroll', onScroll, { passive: true });
-		return () => window.removeEventListener('scroll', onScroll as EventListener);
-	});
-
-	// Smooth scroll logic
-	function smoothScroll(event: Event) {
-		event.preventDefault();
-		const targetId = (event.currentTarget as HTMLAnchorElement).getAttribute('href');
-		if (targetId && targetId.startsWith('#')) {
-			const targetElement = document.querySelector(targetId);
-			if (targetElement) {
-				const targetPosition =
-					targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
-				if (mobileMenuOpen) {
-					mobileMenuOpen = false; // Close the menu immediately
-					setTimeout(() => {
-						window.scrollTo({
-							top: targetPosition,
-							behavior: 'smooth'
-						});
-					}, 300); // Delay scroll to allow menu to close
-				} else {
-					window.scrollTo({
-						top: targetPosition,
-						behavior: 'smooth'
-					});
-				}
-			}
-		}
-	}
-
-	// Scroll to top
-	function scrollToTop() {
-		window.scrollTo({
-			top: 0,
-			behavior: 'smooth'
-		});
-	}
+	// Navbar and scrolling logic moved to layout's Navbar component
 </script>
 
 <svelte:head>
 	<title>Prefire CS2 Servers</title>
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "VideoObject",
+			"name": "Prefire CS2 Servers Gameplay",
+			"description": "Gameplay footage on Prefire.gg private CS2 servers with skin changer support.",
+			"thumbnailUrl": "https://prefire.gg/placeholder-cs2.webp",
+			"uploadDate": "2025-09-18T08:00:00+00:00",
+			"duration": "PT15S",
+			"contentUrl": "https://prefire.gg/landing-hero.mp4"
+		}
+	</script>
 </svelte:head>
 
-<!-- Navbar -->
-<nav
-	class={'fixed top-0 left-0 right-0 z-50 border-b border-gray-800 bg-background backdrop-blur transition-transform duration-300 transform-gpu ' +
-		(hideNav ? '-translate-y-full' : 'translate-y-0')}
->
-	<div class="max-w-6xl mx-auto py-2 px-8">
-		<div class="flex items-center h-16">
-			<div class="flex-shrink-0 flex items-center">
-				<button
-					onclick={scrollToTop}
-					class="font-bold text-lg hover:opacity-70 cursor-pointer transition-all duration-300"
-					><img src={Logo} alt="CS2 Gathers" class="w-auto h-12" /></button
-				>
-			</div>
-
-			<!-- Mobile menu button (small screens) -->
-			<div class="ml-auto flex items-center sm:hidden">
-				<button
-					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-					type="button"
-					class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-					aria-controls="mobile-menu"
-					aria-expanded={mobileMenuOpen}
-				>
-					<span class="sr-only">Toggle main menu</span>
-					{#if mobileMenuOpen}
-						<svg
-							class="block h-6 w-6"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="#717171"
-							aria-hidden="true"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
-					{:else}
-						<svg
-							class="block h-6 w-6"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="#717171"
-							aria-hidden="true"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M4 6h16M4 12h16M4 18h16"
-							/>
-						</svg>
-					{/if}
-				</button>
-			</div>
-
-			<!-- Navigation Links -->
-			<div class="hidden sm:flex sm:flex-grow sm:justify-end sm:space-x-6">
-				<a
-					href="#skins"
-					onclick={smoothScroll}
-					class="inline-flex transition-all duration-300 items-center px-1 pt-1 text-md font-medium text-gray-500 hover:text-white"
-					>Skins</a
-				>
-				<a
-					href="#servers"
-					onclick={smoothScroll}
-					class="inline-flex transition-all duration-300 items-center px-1 pt-1 text-md font-medium text-gray-500 hover:text-white"
-					>Servers</a
-				>
-				<a
-					href="#faq"
-					onclick={smoothScroll}
-					class="inline-flex transition-all duration-300 items-center px-1 pt-1 text-md font-medium text-gray-500 hover:text-white"
-					>FAQ</a
-				>
-				<a
-					href="#pricing"
-					onclick={smoothScroll}
-					class="inline-flex transition-all duration-300 items-center px-1 pt-1 text-md font-medium text-gray-500 hover:text-white"
-					>Pricing</a
-				>
-				<a
-					href="#about"
-					onclick={smoothScroll}
-					class="inline-flex transition-all duration-300 items-center px-1 pt-1 text-md font-medium text-gray-500 hover:text-white"
-					>About</a
-				>
-			</div>
-
-			<div class="hidden sm:ml-6 sm:flex sm:items-center text-sm">
-				<!-- Start now Button -->
-				<Button variant="default">Steam Login</Button>
-			</div>
-		</div>
-
-		{#if mobileMenuOpen}
-			<!-- Mobile dropdown menu -->
-			<div id="mobile-menu" class="sm:hidden pb-4 px-0">
-				<div class="pt-2 space-y-1">
-					<a
-						href="#gamemodes"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>Gamemodes</a
-					>
-					<a
-						href="#skins"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>Skins</a
-					>
-					<a
-						href="#servers"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>Servers</a
-					>
-					<a
-						href="#faq"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>FAQ</a
-					>
-					<a
-						href="#pricing"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>Pricing</a
-					>
-					<a
-						href="#about"
-						onclick={smoothScroll}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-800"
-						>About</a
-					>
-				</div>
-				<div class="mt-3">
-					<GradientButton text="Login with Steam →" />
-				</div>
-			</div>
-		{/if}
-	</div>
-</nav>
+<!-- Navbar moved to layout -->
 
 <!-- Hero Section -->
-<main class="min-h-[568px] max-h-[1440px] px-0 mt-[82px] flex items-center mb-16 lg:mb-0">
+<main class="min-h-[568px] max-h-[1440px] px-0 flex items-center mb-16 lg:mb-0 md:mt-24 lg:mt-0">
 	<div class="max-w-6xl mx-auto w-full px-8">
 		<div class="grid grid-cols-1 lg:grid-cols-10 gap-10 items-center">
 			<div class="text-left lg:col-span-4">
@@ -348,25 +131,31 @@
 				>
 					Gathers<br /> Skins<br /> Scrims<br />Partymodes
 				</h1>
-				<p class="text-lg text-gray-500 mb-8 max-w-md lg:pr-6 text-center lg:text-left">
+				<p
+					class="text-lg text-gray-500 mb-8 max-w-md lg:pr-6 mx-auto lg:mx-0 text-center lg:text-left"
+				>
 					Private CS2 servers for you and your friends with full skin changer support, hosted all
 					over the world.
 				</p>
-				<GradientButton text="Get Started &rarr;" class="mx-auto lg:mx-0" />
+				<div class="space-y-4 text-center lg:text-left">
+					<GradientButton text="Get Started &rarr;" class="mx-auto lg:mx-0" />
+				</div>
 			</div>
 			<div
 				class="flex items-center justify-center order-first md:order-none lg:col-span-6 rounded-md h-full"
 			>
 				<div class="relative rounded-md shadow-[0_0_60px_rgba(255,230,255,0.2)] mt-12 lg:mt-0">
 					<video
-						src={Video}
 						poster={HeroImage}
 						autoplay
 						loop
 						muted
 						playsinline
+						preload="metadata"
 						class="rounded-md w-full h-full object-cover"
 					>
+						<source src={HeroVideo} type="video/mp4" />
+						Your browser does not support the video tag.
 					</video>
 				</div>
 			</div>
@@ -380,7 +169,7 @@
 		<h2 class="text-4xl font-medium text-center mb-12 lg:mb-16">The Beloved Gamemodes</h2>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 			<!-- Competitive -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 						><path
@@ -399,7 +188,7 @@
 			</Card.Root>
 
 			<!-- Arms Race -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="24" height="24" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"
 						><path
@@ -418,7 +207,7 @@
 			</Card.Root>
 
 			<!-- Retakes -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 						><g fill="none" stroke="#717171" stroke-width="1.5"
@@ -439,7 +228,7 @@
 			</Card.Root>
 
 			<!-- KZ -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 						><path
@@ -459,7 +248,7 @@
 			</Card.Root>
 
 			<!-- Surf -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 						><path
@@ -477,7 +266,7 @@
 			</Card.Root>
 
 			<!-- Partymode -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<svg width="28" height="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"
 						><path
@@ -523,18 +312,19 @@
 <section id="skins" class="py-16 lg:pt-20 lg:pb-28 text-white">
 	<div class="max-w-6xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-10">
 		<div class="col-span-1">
-			<h2 class="text-4xl font-medium text-center lg:text-left text-gray-200 mb-6">
+			<h2 class="text-4xl font-medium text-center lg:text-left text-gray-200 mb-6 reveal-fadeup">
 				Skin Changer Support for All Gamemodes
 			</h2>
 		</div>
 		<div class="col-span-1">
-			<p class="text-md text-gray-500 text-center lg:text-left">
+			<p class="text-md text-gray-500 text-center lg:text-left reveal-fadeup">
 				Use your dream skins in your own private Prefire server. Skin changers are supported and
 				fully secure on our servers.
 			</p>
 		</div>
-		<div class="col-span-1 lg:col-span-2 h-[1px] bg-gray-800 mb-4 lg:mb-8"></div>
-		<div class="col-span-1 lg:col-span-2">
+		<!-- Spacer -->
+		<div class="col-span-1 lg:col-span-2 w-full h-px bg-gray-800 mb-8 reveal-fadeup"></div>
+		<div class="col-span-1 lg:col-span-2 reveal-fadeup">
 			<img
 				src={SkinsImage}
 				alt="Placeholder"
@@ -548,15 +338,15 @@
 <section id="servers" class="py-16 lg:pt-20 lg:pb-28 text-white">
 	<div class="max-w-6xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
 		<div class="lg:col-span-1 space-y-6 flex flex-col">
-			<h2 class="text-4xl font-medium leading-[1.1] text-center lg:text-left text-white mb-6">
+			<h2 class="text-4xl font-medium leading-[1.1] text-center lg:text-left text-white mb-6 reveal-fadeup">
 				Flagship Skill Balancing System <br /> Cutting Edge Customizability
 			</h2>
-			<p class="text-md text-gray-500 font-medium text-center lg:text-left mb-8">
+			<p class="text-md text-gray-500 font-medium text-center lg:text-left mb-8 reveal-fadeup">
 				Play on ready to go servers with click-and-play gamemodes and maps. Run scrims with set
 				teams, pugs and gathers with auto teams, host KZ, surf, play retakes, or have fun with party
 				games.
 			</p>
-			<div class="flex justify-center lg:justify-start space-x-8 mb-10">
+			<div class="flex justify-center lg:justify-start space-x-8 mb-10 reveal-fadeup">
 				<div class="text-center">
 					<p class="text-2xl font-bold text-white">1 Click</p>
 					<p class="text-gray-500">Setup</p>
@@ -570,13 +360,13 @@
 					<p class="text-gray-500">Uptime</p>
 				</div>
 			</div>
-			<Button variant="default" class="mx-auto lg:mx-0 self-center lg:self-start"
+			<Button variant="default" class="mx-auto lg:mx-0 self-center lg:self-start reveal-fadeup"
 				>Get Started &rarr;</Button
 			>
 		</div>
 		<div class="lg:col-span-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
 			<!-- Feature Card 1 -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<Card.Title>Worldwide</Card.Title>
 				</Card.Header>
@@ -588,7 +378,7 @@
 			</Card.Root>
 
 			<!-- Feature Card 2 -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<Card.Title>Custom Maps</Card.Title>
 				</Card.Header>
@@ -600,9 +390,9 @@
 			</Card.Root>
 
 			<!-- Feature Card 3 -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
-					<Card.Title>Skill</Card.Title>
+					<Card.Title>Balancing</Card.Title>
 				</Card.Header>
 				<Card.Content>
 					<p class="text-md text-gray-500">
@@ -612,7 +402,7 @@
 			</Card.Root>
 
 			<!-- Feature Card 4 -->
-			<Card.Root>
+			<Card.Root class="reveal-fadeup">
 				<Card.Header>
 					<Card.Title>Affordable</Card.Title>
 				</Card.Header>
@@ -629,8 +419,8 @@
 <!-- FAQ Section -->
 <section id="faq" class="py-16 lg:pt-20 lg:pb-28 text-white">
 	<div class="max-w-6xl mx-auto px-8">
-		<h2 class="text-4xl font-medium text-center mb-12 lg:mb-16">Frequently Asked Questions</h2>
-		<Accordion.Root type="single" class="w-full" value="item-1">
+		<h2 class="text-4xl font-medium text-center mb-12 lg:mb-16 reveal-fadeup">Frequently Asked Questions</h2>
+		<Accordion.Root type="single" class="w-full reveal-fadeup" value="item-1">
 			<Accordion.Item value="item-1">
 				<Accordion.Trigger>How does a skin changer work?</Accordion.Trigger>
 				<Accordion.Content>
@@ -692,8 +482,8 @@
 					<p class="font-medium text-gray-500">
 						We only use cookies to store your login session. Steam and Twitch logins are only used
 						for authentication and Prefire.gg only gets access to your Steam and Twitch profile
-						picture and your public username. We do not store personal data. We do not have access
-						to your account.
+						picture and your public username when logging in. We do not have access to your account. 
+						We do not sell your information.
 					</p>
 				</Accordion.Content>
 			</Accordion.Item>
@@ -704,20 +494,20 @@
 <!-- Pricing Section -->
 <section id="pricing" class="py-16 lg:pt-20 lg:pb-28 text-white">
 	<div class="max-w-6xl mx-auto px-8">
-		<h2 class="text-4xl font-medium text-center mb-6 lg:mb-8">Pricing</h2>
-		<p class="text-md text-gray-500 font-medium text-center mb-8">
+		<h2 class="text-4xl font-medium text-center mb-6 lg:mb-8 reveal-fadeup">Pricing</h2>
+		<p class="text-md text-gray-500 font-medium text-center mb-8 reveal-fadeup">
 			Pick the plan that fits your needs. Save 10% by paying quarterly.
 		</p>
-		<div class="flex flex-row items-center gap-3 mb-10 justify-center">
-			<p class="text-xs uppercase tracking-wider text-gray-500">
+		<div class="flex flex-row items-center gap-3 mb-10 justify-center reveal-fadeup">
+			<p class="text-xs uppercase tracking-wider text-gray-500 reveal-fadeup">
 				Monthly &nbsp; / &nbsp; Quarterly
 			</p>
-			<Switch id="billing-cycle" class="ml-1" bind:checked={isQuarterly} />
+			<Switch id="billing-cycle" class="ml-1 reveal-fadeup" bind:checked={isQuarterly} />
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 			{#each plans as plan}
-				<Card.Root>
+				<Card.Root class="reveal-fadeup">
 					<Card.Header class="flex items-start justify-between">
 						<span class="text-md font-semibold tracking-wider py-1 text-gray-300">{plan.label}</span
 						>
@@ -783,39 +573,30 @@
 <!-- About section -->
 <section id="about" class="py-16 lg:pt-20 lg:pb-28 text-white">
 	<div class="max-w-6xl mx-auto px-8">
-		<h2 class="text-4xl font-medium mb-6 text-center lg:text-left">
+		<h2 class="text-4xl font-medium mb-6 text-center lg:text-left reveal-fadeup">
 			A Project Born out of Love for the Players
 		</h2>
-		<p class="text-md text-gray-500 max-w-4xl font-medium mr-auto lg:text-left mb-8">
+		<p class="text-md text-gray-500 max-w-4xl font-medium mr-auto text-center lg:text-left mb-8 reveal-fadeup">
 			Prefire.gg was born out of passion for building stronger communities and balancing fun and
 			skill. Our intention was to create a plug-and-play platform for creators to engage with their
 			communities, hosting both competitive matches and casual party games. Prefire.gg was born to
 			make the game fun for everyone.
 		</p>
-		<div class="mt-12 flex justify-center">
+		<div class="mt-12 flex justify-center reveal-fadeup">
 			<!-- Background -->
 			<div
 				class="w-full max-w-6xl aspect-[16/9] bg-cover bg-center bg-no-repeat rounded-lg flex items-center flex-col justify-center text-gray-500 shadow-[0_0_60px_rgba(255,230,255,0.2)]"
 				style="background-image: url({AboutImage})"
 			>
 				<div
-					class="bg-[rgba(0,0,0,0.33)] p-6 rounded-lg w-full h-full flex flex-col items-center justify-center"
+					class="bg-[rgba(0,0,0,0.33)] p-6 rounded-lg w-full h-full flex-col items-center justify-center hidden lg:flex"
 				>
-					<h4 class="text-4xl font-medium mb-6 mt-auto text-center text-white">
+					<h4 class="text-4xl font-medium mb-6 mt-auto text-center text-white hidden lg:block">
 						Are you Ready to Make<br />Counter-Strike Fun?
 					</h4>
-					<GradientButton text="Join the Community" class="mb-12" />
+					<GradientButton text="Join the Community" class="lg:mb-12" />
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
-
-<!-- Footer -->
-<footer class="py-16 lg:pt-20 lg:pb-28 text-white">
-	<div class="max-w-6xl mx-auto px-8">
-		<p class="text-center text-gray-500">
-			Prefire.gg &copy; {new Date().getFullYear()}
-		</p>
-	</div>
-</footer>
