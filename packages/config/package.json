@@ -1,0 +1,13 @@
+{
+  "name": "@prefire/config",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.js",
+  "types": "./index.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
